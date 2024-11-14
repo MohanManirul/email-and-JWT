@@ -25,15 +25,16 @@ export async function POST(req, res) {
     
       
       return NextResponse.json(
-        { status: true, message: "Login Success" },
-        { status: 200 }
+        { status: true, message: "Login Success" , token: token},
+        { status: 200 },
+       
       );
 
     } else {
       return NextResponse.json( 
 
         { status: true, message: "Invalid User" },
-        { status: 200});
+        { status: 401});
     }
 
   }
