@@ -9,11 +9,25 @@ export async function middleware( req , res ){
     if(req.nextUrl.pathname.startsWith("/api/profile")){
 
         try{
-            const reqHeader = new Headers(req.headers);
+
+            const reqHeader = new Headers(req.headers); // pick token from header
             const token = reqHeader.get("token");
+
+            // token verify kortece
             const secretKey = new TextEncoder().encode(process.env.jWT_SECRET);           
             const decodedString = await jwtVerify(token, secretKey);
-            return NextResponse.next();
+
+            // add with next request
+            const email = decodedString['payload']['email'];
+            reqHeader.set('email', email);
+
+            // go next step with user email
+            return NextResponse.next(
+                {
+                    headers: reqHeader,
+                    status: 200
+                }
+            );
         }catch(e){
             return NextResponse.json( 
 
@@ -22,6 +36,6 @@ export async function middleware( req , res ){
             );
         }
 
-        
+         
     }
 }

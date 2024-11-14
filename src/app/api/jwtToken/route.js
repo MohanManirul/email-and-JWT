@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 // SignJWT , setIssuedAt = property
  
-
+ 
 // token encode using jwt
 export async function GET() {
   const secretKey = new TextEncoder().encode(process.env.jWT_SECRET);
