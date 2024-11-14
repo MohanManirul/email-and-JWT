@@ -3,9 +3,11 @@ import { NextResponse } from "next/server";
 
 // SignJWT , setIssuedAt = property
  
+
+// token encode using jwt
 export async function GET() {
   const secretKey = new TextEncoder().encode(process.env.jWT_SECRET);
-  const payload = {email:"test@gmail.com",user_id:"aswqq"}
+  const payload = {email:"test@gmail.com",user_id:"1"}
   let token = await new SignJWT(payload) // details to  encode in the token
     .setProtectedHeader({ alg: "HS256" }) // algorithm
     .setIssuedAt()
@@ -14,4 +16,20 @@ export async function GET() {
     .sign(secretKey); // secretKey generated from previous step
 
   return NextResponse.json({token:token});
+}
+
+// token decode using jwt
+
+export async function POST(req) {
+  const jsonBody = await req.json();
+  const Token = jsonBody['token'];
+
+  const secretKey = new TextEncoder().encode(process.env.jWT_SECRET);
+
+  try {
+    const  key  = await  jwtVerify(Token, secretKey);
+    return NextResponse.json({ msg: "Token verified", key });
+  } catch (err) {
+    return NextResponse.json({ msg: "Token invalid" });
+  }
 }
